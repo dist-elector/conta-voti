@@ -14,12 +14,13 @@
             margin: 25px; /* Aumentata la distanza tra le righe */
         }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 18px;
         }
         .count {
             font-size: 20px;
             margin-left: 10px;
+            margin-right: 30px;
         }
         .elected {
             color: green;
@@ -29,6 +30,20 @@
         .bold-uppercase {
             font-weight: bold;
             text-transform: uppercase;
+        }
+        .minus-button {
+            background-color: white;
+            color: red;
+            border: 2px solid red;
+            border-radius: 50%;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            margin-left: 30px;
+            cursor: pointer;
+        }
+        .minus-button:hover {
+            background-color: #fdd;
         }
     </style>
 </head>
@@ -46,6 +61,7 @@
         <span id="candidate1-name" class="bold-uppercase">prof. Iervolino</span>
         <button onclick="incrementVote('candidate1')">+1 Voto</button>
         <span class="count" id="candidate1-count">0</span>
+        <button class="minus-button" onclick="decrementVote('candidate1')">-</button>
         <span class="elected" id="candidate1-elected"></span>
     </div>
 
@@ -54,6 +70,7 @@
         <span id="candidate2-name" class="bold-uppercase">prof. Nigro</span>
         <button onclick="incrementVote('candidate2')">+1 Voto</button>
         <span class="count" id="candidate2-count">0</span>
+        <button class="minus-button" onclick="decrementVote('candidate2')">-</button>
         <span class="elected" id="candidate2-elected"></span>
     </div>
 
@@ -62,6 +79,7 @@
         <span>Altri</span>
         <button onclick="incrementVote('others')">+1 Voto</button>
         <span class="count" id="others-count">0</span>
+        <button class="minus-button" onclick="decrementVote('others')">-</button>
     </div>
 
     <!-- Sezione per "Bianche" -->
@@ -69,6 +87,7 @@
         <span>Bianche</span>
         <button onclick="incrementVote('blank')">+1 Voto</button>
         <span class="count" id="blank-count">0</span>
+        <button class="minus-button" onclick="decrementVote('blank')">-</button>
     </div>
 
     <!-- Sezione per "Nulle" -->
@@ -76,6 +95,7 @@
         <span>Nulle</span>
         <button onclick="incrementVote('null')">+1 Voto</button>
         <span class="count" id="null-count">0</span>
+        <button class="minus-button" onclick="decrementVote('null')">-</button>
     </div>
 
     <!-- Sezione per i voti scrutinati -->
@@ -99,6 +119,16 @@
             document.getElementById(type + '-count').textContent = votes[type];
             checkQuorum();  // Verifica se qualcuno ha raggiunto il quorum dopo ogni incremento
             updateTotalVotes();  // Aggiorna il totale dei voti scrutinati
+        }
+
+        // Funzione per decrementare il conteggio
+        function decrementVote(type) {
+            if (votes[type] > 0) {
+                votes[type]--;
+                document.getElementById(type + '-count').textContent = votes[type];
+                checkQuorum();  // Verifica di nuovo se qualcuno ha raggiunto o superato il quorum
+                updateTotalVotes();  // Aggiorna il totale dei voti scrutinati
+            }
         }
 
         // Funzione per verificare se il quorum è stato raggiunto
