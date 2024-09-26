@@ -86,7 +86,7 @@
     <!-- Sezione per il primo candidato -->
     <div class="row">
         <span id="candidate1-name" class="bold-uppercase">prof. Iervolino</span>
-        <button onclick="incrementVote('candidate1')">+1</button>
+        <button class="plus-button" onclick="incrementVote('candidate1')">+1</button>
         <span class="count" id="candidate1-count">0</span>
         <button class="minus-button" onclick="decrementVote('candidate1')">-</button>
         <span class="elected" id="candidate1-elected"></span>
@@ -95,7 +95,7 @@
     <!-- Sezione per il secondo candidato -->
     <div class="row">
         <span id="candidate2-name" class="bold-uppercase">prof. Nigro</span>
-        <button onclick="incrementVote('candidate2')">+1</button>
+        <button class="plus-button" onclick="incrementVote('candidate2')">+1</button>
         <span class="count" id="candidate2-count">0</span>
         <button class="minus-button" onclick="decrementVote('candidate2')">-</button>
         <span class="elected" id="candidate2-elected"></span>
@@ -104,7 +104,7 @@
     <!-- Sezione per "Altri" -->
     <div class="row">
         <span>Altri</span>
-        <button onclick="incrementVote('others')">+1</button>
+        <button class="plus-button" onclick="incrementVote('others')">+1</button>
         <span class="count" id="others-count">0</span>
         <button class="minus-button" onclick="decrementVote('others')">-</button>
     </div>
@@ -112,7 +112,7 @@
     <!-- Sezione per "Bianche" -->
     <div class="row">
         <span>Bianche</span>
-        <button onclick="incrementVote('blank')">+1</button>
+        <button class="plus-button" onclick="incrementVote('blank')">+1</button>
         <span class="count" id="blank-count">0</span>
         <button class="minus-button" onclick="decrementVote('blank')">-</button>
     </div>
@@ -120,7 +120,7 @@
     <!-- Sezione per "Nulle" -->
     <div class="row">
         <span>Nulle</span>
-        <button onclick="incrementVote('null')">+1</button>
+        <button class="plus-button" onclick="incrementVote('null')">+1</button>
         <span class="count" id="null-count">0</span>
         <button class="minus-button" onclick="decrementVote('null')">-</button>
     </div>
