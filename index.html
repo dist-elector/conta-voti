@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conteggio Voti Elezioni</title>
+    <title>Elezioni DIST - I scrutinio</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +11,7 @@
             margin: 20px;
         }
         .candidate, .others {
-            margin: 15px;
+            margin: 25px; /* Aumentata la distanza tra le righe */
         }
         button {
             padding: 10px 20px;
@@ -26,20 +26,24 @@
             font-weight: bold;
             margin-left: 10px;
         }
+        .bold-uppercase {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
-    <h1>Conteggio Voti</h1>
+    <h1>Elezioni DIST - I scrutinio</h1>
 
-    <!-- Sezione per inserire il quorum -->
+    <!-- Sezione per il quorum (bloccato con valore 45) -->
     <div>
-        <label for="quorum">Inserisci il quorum (facoltativo): </label>
-        <input type="number" id="quorum" placeholder="Es. 100" oninput="checkQuorum()">
+        <label for="quorum">Quorum (non modificabile): </label>
+        <input type="number" id="quorum" value="45" disabled>
     </div>
 
     <!-- Sezione per il primo candidato -->
     <div class="candidate">
-        <span id="candidate1-name">Candidato 1</span>
+        <span id="candidate1-name" class="bold-uppercase">prof. Iervolino</span>
         <button onclick="incrementVote('candidate1')">+1 Voto</button>
         <span class="count" id="candidate1-count">0</span>
         <span class="elected" id="candidate1-elected"></span>
@@ -47,7 +51,7 @@
 
     <!-- Sezione per il secondo candidato -->
     <div class="candidate">
-        <span id="candidate2-name">Candidato 2</span>
+        <span id="candidate2-name" class="bold-uppercase">prof. Nigro</span>
         <button onclick="incrementVote('candidate2')">+1 Voto</button>
         <span class="count" id="candidate2-count">0</span>
         <span class="elected" id="candidate2-elected"></span>
@@ -74,6 +78,11 @@
         <span class="count" id="null-count">0</span>
     </div>
 
+    <!-- Sezione per i voti scrutinati -->
+    <div class="others">
+        <h3>Voti scrutinati: <span id="total-votes">0</span></h3>
+    </div>
+
     <script>
         // Oggetti per memorizzare i voti
         const votes = {
@@ -89,18 +98,12 @@
             votes[type]++;
             document.getElementById(type + '-count').textContent = votes[type];
             checkQuorum();  // Verifica se qualcuno ha raggiunto il quorum dopo ogni incremento
+            updateTotalVotes();  // Aggiorna il totale dei voti scrutinati
         }
 
         // Funzione per verificare se il quorum è stato raggiunto
         function checkQuorum() {
             const quorum = document.getElementById('quorum').value;
-
-            // Se il quorum non è definito o è vuoto, rimuove l'etichetta "ELETTO"
-            if (!quorum) {
-                document.getElementById('candidate1-elected').textContent = '';
-                document.getElementById('candidate2-elected').textContent = '';
-                return;
-            }
 
             // Verifica se il candidato 1 ha raggiunto il quorum
             if (votes.candidate1 >= quorum) {
@@ -115,6 +118,12 @@
             } else {
                 document.getElementById('candidate2-elected').textContent = '';
             }
+        }
+
+        // Funzione per aggiornare il totale dei voti scrutinati
+        function updateTotalVotes() {
+            const totalVotes = votes.candidate1 + votes.candidate2 + votes.others + votes.blank + votes.null;
+            document.getElementById('total-votes').textContent = totalVotes;
         }
     </script>
 </body>
