@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conteggio Voti Elezioni</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .candidate, .others {
+            margin: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .count {
+            font-size: 20px;
+            margin-left: 10px;
+        }
+        .elected {
+            color: green;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Conteggio Voti</h1>
+
+    <!-- Sezione per inserire il quorum -->
+    <div>
+        <label for="quorum">Inserisci il quorum (facoltativo): </label>
+        <input type="number" id="quorum" placeholder="Es. 100" oninput="checkQuorum()">
+    </div>
+
+    <!-- Sezione per il primo candidato -->
+    <div class="candidate">
+        <span id="candidate1-name">Candidato 1</span>
+        <button onclick="incrementVote('candidate1')">+1 Voto</button>
+        <span class="count" id="candidate1-count">0</span>
+        <span class="elected" id="candidate1-elected"></span>
+    </div>
+
+    <!-- Sezione per il secondo candidato -->
+    <div class="candidate">
+        <span id="candidate2-name">Candidato 2</span>
+        <button onclick="incrementVote('candidate2')">+1 Voto</button>
+        <span class="count" id="candidate2-count">0</span>
+        <span class="elected" id="candidate2-elected"></span>
+    </div>
+
+    <!-- Sezione per "Altri" -->
+    <div class="others">
+        <span>Altri</span>
+        <button onclick="incrementVote('others')">+1 Voto</button>
+        <span class="count" id="others-count">0</span>
+    </div>
+
+    <!-- Sezione per "Bianche" -->
+    <div class="others">
+        <span>Bianche</span>
+        <button onclick="incrementVote('blank')">+1 Voto</button>
+        <span class="count" id="blank-count">0</span>
+    </div>
+
+    <!-- Sezione per "Nulle" -->
+    <div class="others">
+        <span>Nulle</span>
+        <button onclick="incrementVote('null')">+1 Voto</button>
+        <span class="count" id="null-count">0</span>
+    </div>
+
+    <script>
+        // Oggetti per memorizzare i voti
+        const votes = {
+            candidate1: 0,
+            candidate2: 0,
+            others: 0,
+            blank: 0,
+            null: 0
+        };
+
+        // Funzione per incrementare il conteggio
+        function incrementVote(type) {
+            votes[type]++;
+            document.getElementById(type + '-count').textContent = votes[type];
+            checkQuorum();  // Verifica se qualcuno ha raggiunto il quorum dopo ogni incremento
+        }
+
+        // Funzione per verificare se il quorum è stato raggiunto
+        function checkQuorum() {
+            const quorum = document.getElementById('quorum').value;
+
+            // Se il quorum non è definito o è vuoto, rimuove l'etichetta "ELETTO"
+            if (!quorum) {
+                document.getElementById('candidate1-elected').textContent = '';
+                document.getElementById('candidate2-elected').textContent = '';
+                return;
+            }
+
+            // Verifica se il candidato 1 ha raggiunto il quorum
+            if (votes.candidate1 >= quorum) {
+                document.getElementById('candidate1-elected').textContent = 'ELETTO';
+            } else {
+                document.getElementById('candidate1-elected').textContent = '';
+            }
+
+            // Verifica se il candidato 2 ha raggiunto il quorum
+            if (votes.candidate2 >= quorum) {
+                document.getElementById('candidate2-elected').textContent = 'ELETTO';
+            } else {
+                document.getElementById('candidate2-elected').textContent = '';
+            }
+        }
+    </script>
+</body>
+</html>
