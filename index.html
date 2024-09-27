@@ -19,8 +19,11 @@
             text-align: center;  /* Centrato il testo */
             transition: background-color 0.3s;  /* Effetto transizione per cambio colore */
         }
+        button:hover {
+            background-color: lightgreen;  /* Colore verde quando il mouse passa sopra */
+        }
         button:active {
-            background-color: lightgreen;  /* Colore verde quando cliccato */
+            background-color: green;  /* Colore verde quando cliccato */
         }
         .count {
             font-size: 20px;
@@ -131,8 +134,8 @@
     </div>
 
     <script>
-        // Oggetti per memorizzare i voti
-        const votes = {
+        // Recupera i voti dal localStorage o imposta i valori iniziali
+        const votes = JSON.parse(localStorage.getItem('votes')) || {
             candidate1: 0,
             candidate2: 0,
             others: 0,
@@ -140,12 +143,27 @@
             null: 0
         };
 
+        // Inizializza i voti dai dati salvati
+        function initializeVotes() {
+            for (const type in votes) {
+                document.getElementById(type + '-count').textContent = votes[type];
+            }
+            updateTotalVotes();
+            checkQuorum();
+        }
+
+        // Salva i voti nel localStorage
+        function saveVotes() {
+            localStorage.setItem('votes', JSON.stringify(votes));
+        }
+
         // Funzione per incrementare il conteggio
         function incrementVote(type) {
             votes[type]++;
             document.getElementById(type + '-count').textContent = votes[type];
-            checkQuorum();  // Verifica se qualcuno ha raggiunto il quorum dopo ogni incremento
-            updateTotalVotes();  // Aggiorna il totale dei voti scrutinati
+            checkQuorum();
+            updateTotalVotes();
+            saveVotes();  // Salva i voti dopo ogni incremento
         }
 
         // Funzione per decrementare il conteggio
@@ -153,8 +171,9 @@
             if (votes[type] > 0) {
                 votes[type]--;
                 document.getElementById(type + '-count').textContent = votes[type];
-                checkQuorum();  // Verifica di nuovo se qualcuno ha raggiunto o superato il quorum
-                updateTotalVotes();  // Aggiorna il totale dei voti scrutinati
+                checkQuorum();
+                updateTotalVotes();
+                saveVotes();  // Salva i voti dopo ogni decremento
             }
         }
 
@@ -162,14 +181,12 @@
         function checkQuorum() {
             const quorum = document.getElementById('quorum').value;
 
-            // Verifica se il candidato 1 ha raggiunto il quorum
             if (votes.candidate1 >= quorum) {
                 document.getElementById('candidate1-elected').textContent = 'ELETTO';
             } else {
                 document.getElementById('candidate1-elected').textContent = '';
             }
 
-            // Verifica se il candidato 2 ha raggiunto il quorum
             if (votes.candidate2 >= quorum) {
                 document.getElementById('candidate2-elected').textContent = 'ELETTO';
             } else {
@@ -182,6 +199,9 @@
             const totalVotes = votes.candidate1 + votes.candidate2 + votes.others + votes.blank + votes.null;
             document.getElementById('total-votes').textContent = totalVotes;
         }
+
+        // Inizializza la pagina con i voti salvati
+        window.onload = initializeVotes;
     </script>
 </body>
 </html>
