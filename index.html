@@ -13,6 +13,9 @@
         .candidate, .others {
             margin: 25px; /* Aumentata la distanza tra le righe */
         }
+        .quorum-section {
+            margin-bottom: 40px; /* Maggiore distanza dal resto delle righe */
+        }
         button {
             padding: 20px 40px;  /* Aumentate le dimensioni del pulsante */
             font-size: 20px;     /* Testo più grande */
@@ -81,7 +84,7 @@
     <h1>Elezioni DIST - I scrutinio</h1>
 
     <!-- Sezione per il quorum (bloccato con valore 45) -->
-    <div>
+    <div class="quorum-section">
         <label for="quorum">Quorum (non modificabile): </label>
         <input type="number" id="quorum" value="45" disabled>
     </div>
