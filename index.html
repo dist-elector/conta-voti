@@ -61,6 +61,24 @@
         .minus-button:active {
             background-color: lightcoral;
         }
+        .reset-button {
+            margin-top: 40px; /* Distanziare il pulsante di reset per evitare clic accidentali */
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            border-radius: 10px;
+            font-size: 20px;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .reset-button:hover {
+            background-color: lightgray;
+        }
+        .reset-button:active {
+            background-color: red;
+            color: white;
+        }
         .row {
             display: flex;
             justify-content: center;
@@ -68,11 +86,10 @@
             margin-bottom: 20px;
         }
         @media (max-width: 768px) {
-            button, .minus-button {
+            button, .minus-button, .reset-button {
                 padding: 15px 30px;  /* Adattato per mobile */
                 font-size: 18px;
-                width: 50px;
-                height: 50px;
+                width: auto;
             }
             .count {
                 font-size: 18px;
@@ -136,6 +153,9 @@
         <h3>Voti scrutinati: <span id="total-votes">0</span></h3>
     </div>
 
+    <!-- Pulsante per resettare il conteggio -->
+    <button class="reset-button" onclick="resetVotes()">Azzera conteggio</button>
+
     <script>
         // Recupera i voti dal localStorage o imposta i valori iniziali
         const votes = JSON.parse(localStorage.getItem('votes')) || {
@@ -180,6 +200,16 @@
             }
         }
 
+        // Funzione per resettare il conteggio
+        function resetVotes() {
+            for (const type in votes) {
+                votes[type] = 0;
+                document.getElementById(type + '-count').textContent = votes[type];
+            }
+            updateTotalVotes();
+            saveVotes();  // Salva i voti azzerati
+        }
+
         // Funzione per verificare se il quorum è stato raggiunto
         function checkQuorum() {
             const quorum = document.getElementById('quorum').value;
@@ -204,7 +234,4 @@
         }
 
         // Inizializza la pagina con i voti salvati
-        window.onload = initializeVotes;
-    </script>
-</body>
-</html>
+        window.onload = initialize
