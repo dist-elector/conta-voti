@@ -16,6 +16,12 @@
         .quorum-section {
             margin-bottom: 40px;
         }
+        .note {
+            font-size: 12px;
+            color: gray;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
         button {
             padding: 20px 40px;
             font-size: 20px;
@@ -79,6 +85,23 @@
             background-color: red;
             color: white;
         }
+        .scrutinio {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        .scrutinio-in-corso {
+            color: yellow;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+        .scrutinio-terminato {
+            color: red;
+            font-weight: bold;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
         .row {
             display: flex;
             justify-content: center;
@@ -105,6 +128,11 @@
         <label for="quorum">Quorum (non modificabile): </label>
         <input type="number" id="quorum" value="45" disabled>
     </div>
+
+    <!-- Nota sotto il quorum -->
+    <p class="note">
+        Nella prima votazione l'elezione avviene a maggioranza assoluta degli aventi diritto al voto (DR/2016/507 Art. 23)
+    </p>
 
     <!-- Sezione per il primo candidato -->
     <div class="row">
@@ -153,10 +181,18 @@
         <h3>Voti scrutinati: <span id="total-votes">0</span></h3>
     </div>
 
+    <!-- Scritta per la data o per lo scrutinio -->
+    <div class="scrutinio" id="scrutinio-text">
+        15 ottobre - ore 17
+    </div>
+
     <!-- Pulsante per resettare il conteggio -->
     <button class="reset-button" onclick="resetVotes()">Azzera conteggio</button>
 
     <script>
+        const currentDate = new Date();
+        const targetDate = new Date('2024-10-15T17:00:00');
+        
         // Recupera i voti dal localStorage o imposta i valori iniziali
         const votes = JSON.parse(localStorage.getItem('votes')) || {
             candidate1: 0,
@@ -173,6 +209,7 @@
             }
             updateTotalVotes();
             checkQuorum();
+            checkScrutinioStatus();
         }
 
         // Salva i voti nel localStorage
@@ -186,7 +223,7 @@
             document.getElementById(type + '-count').textContent = votes[type];
             checkQuorum();
             updateTotalVotes();
-            saveVotes();  // Salva i voti dopo ogni incremento
+            saveVotes(); 
         }
 
         // Funzione per decrementare il conteggio
@@ -196,7 +233,7 @@
                 document.getElementById(type + '-count').textContent = votes[type];
                 checkQuorum();
                 updateTotalVotes();
-                saveVotes();  // Salva i voti dopo ogni decremento
+                saveVotes(); 
             }
         }
 
@@ -206,8 +243,9 @@
                 votes[type] = 0;
                 document.getElementById(type + '-count').textContent = votes[type];
             }
+            document.querySelectorAll('.elected').forEach(el => el.textContent = ''); // Rimuove "ELETTO"
             updateTotalVotes();
-            saveVotes();  // Salva i voti azzerati
+            saveVotes();
         }
 
         // Funzione per verificare se il quorum è stato raggiunto
@@ -231,6 +269,19 @@
         function updateTotalVotes() {
             const totalVotes = votes.candidate1 + votes.candidate2 + votes.others + votes.blank + votes.null;
             document.getElementById('total-votes').textContent = totalVotes;
+
+            if (totalVotes === 88) {
+                document.getElementById('scrutinio-text').textContent = 'SCRUTINIO TERMINATO';
+                document.getElementById('scrutinio-text').className = 'scrutinio-terminato';
+            }
+        }
+
+        // Funzione per verificare e aggiornare la scritta del quorum in base alla data
+        function checkScrutinioStatus() {
+            if (currentDate >= targetDate) {
+                document.getElementById('scrutinio-text').textContent = 'SCRUTINIO IN CORSO';
+                document.getElementById('scrutinio-text').className = 'scrutinio-in-corso';
+            }
         }
 
         // Inizializza la pagina con i voti salvati
