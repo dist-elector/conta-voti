@@ -192,7 +192,8 @@
     <script>
         const currentDate = new Date();
         const targetDate = new Date('2024-10-15T17:00:00');
-        
+        let isScrutinioTerminato = false;
+
         // Recupera i voti dal localStorage o imposta i valori iniziali
         const votes = JSON.parse(localStorage.getItem('votes')) || {
             candidate1: 0,
@@ -219,16 +220,18 @@
 
         // Funzione per incrementare il conteggio
         function incrementVote(type) {
-            votes[type]++;
-            document.getElementById(type + '-count').textContent = votes[type];
-            checkQuorum();
-            updateTotalVotes();
-            saveVotes(); 
+            if (!isScrutinioTerminato) {
+                votes[type]++;
+                document.getElementById(type + '-count').textContent = votes[type];
+                checkQuorum();
+                updateTotalVotes();
+                saveVotes(); 
+            }
         }
 
         // Funzione per decrementare il conteggio
         function decrementVote(type) {
-            if (votes[type] > 0) {
+            if (!isScrutinioTerminato && votes[type] > 0) {
                 votes[type]--;
                 document.getElementById(type + '-count').textContent = votes[type];
                 checkQuorum();
@@ -244,6 +247,8 @@
                 document.getElementById(type + '-count').textContent = votes[type];
             }
             document.querySelectorAll('.elected').forEach(el => el.textContent = ''); // Rimuove "ELETTO"
+            isScrutinioTerminato = false; // Sblocca i voti
+            checkScrutinioStatus(); // Ripristina la scritta corretta
             updateTotalVotes();
             saveVotes();
         }
@@ -273,6 +278,7 @@
             if (totalVotes === 88) {
                 document.getElementById('scrutinio-text').textContent = 'SCRUTINIO TERMINATO';
                 document.getElementById('scrutinio-text').className = 'scrutinio-terminato';
+                isScrutinioTerminato = true; // Blocca i voti
             }
         }
 
@@ -281,6 +287,8 @@
             if (currentDate >= targetDate) {
                 document.getElementById('scrutinio-text').textContent = 'SCRUTINIO IN CORSO';
                 document.getElementById('scrutinio-text').className = 'scrutinio-in-corso';
+            } else {
+                document.getElementById('scrutinio-text').textContent = '15 ottobre - ore 17';
             }
         }
 
